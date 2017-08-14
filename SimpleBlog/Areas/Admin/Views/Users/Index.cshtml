@@ -1,0 +1,42 @@
+﻿@model SimpleBlog.Areas.Admin.ViewModels.UsersIndex
+
+<h1>Users</h1>
+
+<div class="btn-toolbar">
+    <a class="btn btn-primary" href="@Url.Action("new")"><i class="glyphicon glyphicon-plus"></i> Create user</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Roles</th>
+        <th>Actions</th>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Username</td>
+                <td>@user.Email</td>
+                <td>@string.Join(", ",user.Roles.Select(r => r.Name))</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="@Url.Action("Edit", new { id = user.Id})" class="btn btn-xs btn-primary" >
+                            <i class="glyphicon glyphicon-edit"></i> Edit
+                        </a>
+                        <a href="@Url.Action("ResetPassword", new { id = user.Id})" class="btn btn-xs btn-default">
+                            <i class="glyphicon glyphicon-lock"></i> Reset password
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = user.Id})" class="btn btn-xs btn-danger" data-post="Are you sure you want to delete @user.Username ?">
+                            <i class="glyphicon glyphicon-remove"></i> Delete
+                        </a>
+                    </div>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

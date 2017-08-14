@@ -1,0 +1,102 @@
+﻿@model SimpleBlog.Areas.Admin.ViewModels.PostsIndex
+
+<h1>Posts</h1>
+
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a class="btn btn-primary" href="@Url.Action("new")"><i class="glyphicon glyphicon-plus"></i> Create post</a>
+    </div>
+    <div class="btn-group pull-right">
+        @if (Model.Posts.HasPreviousPage)
+        {
+            <a class="btn btn-primary btn-sm" href="@Url.Action("Index", new {page = Model.Posts.PreviousPage})">
+                <i class="glyphicon glyphicon-chevron-left"></i> Previous page
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-default btn-sm disabled" href="#">
+                <i class="glyphicon glyphicon-chevron-left"></i> Previous page
+            </a>
+        }
+        
+        @if (Model.Posts.HasNextPage)
+        {
+            <a class="btn btn-primary btn-sm" href="@Url.Action("Index", new {page = Model.Posts.NextPage})">
+                Next page <i class="glyphicon glyphicon-chevron-right"></i> 
+            </a>
+        }
+        else
+        {
+            <a class="btn btn-default btn-sm disabled" href="#">
+                Next page <i class="glyphicon glyphicon-chevron-right"></i> 
+            </a>
+        }
+       
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Tags</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </thead>
+    <tbody>
+        @foreach (var post in Model.Posts)
+        {
+            var klass = "";
+            if (post.IsDeleted)
+            {
+                klass = "danger";
+            }
+            
+            <tr class="@klass">
+                <td>@post.Title</td>
+                <td>@post.User.Username</td>
+                <td>@string.Join(", ", post.Tags.Select(t => t.Name))</td>
+                <td>@post.CreatedAt</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="@Url.Action("Edit", new { id = post.Id})" class="btn btn-xs btn-primary">
+                            <i class="glyphicon glyphicon-edit"></i> Edit
+                        </a>
+
+                        @if (!post.IsDeleted)
+                        {
+
+                            <div class="btn-group btn-group-xs">
+                                <a href="@Url.Action("Trash", new { id = post.Id})" class="btn btn-xs btn-danger" data-post="Are you sure you want to trash this post?">
+                                    <i class="glyphicon glyphicon-remove"></i> Trash
+                                </a>
+                                <a href="#" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" >
+                                    <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="@Url.Action("Delete", new { id = post.Id})" data-post="Are you sure you want to DELETE this post?">
+                                            <i class="glyphicon glyphicon-remove"></i> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Restore", new { id = post.Id})" class="btn btn-xs btn-success" data-post="">
+                                <i class="glyphicon glyphicon-plus-sign"></i> Restore
+                            </a>
+                        }
+                        
+                    </div>
+                </td>
+
+
+
+            </tr>
+        }
+    </tbody>
+</table>
